@@ -114,10 +114,7 @@ st.sidebar.write("Status : Production")
 # =====================================================
 
 BASE_DIR = Path(__file__).resolve().parent
-import os
 
-st.write("Current Working Directory:", os.getcwd())
-st.write("Isi folder:", os.listdir())
 @st.cache_resource
 def load_ml_assets():
     model_path = BASE_DIR / "model_risiko_v1.joblib"
