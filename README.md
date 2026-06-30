@@ -1,0 +1,5 @@
+- NPM : 2313020007
+- Nama : Azmi Sophia Wakova
+- Kelas : 3B
+- Mata Kuliah : Pemodelan dan Simulasi
+- Tugas 16b Lecture Note Praktik M15
