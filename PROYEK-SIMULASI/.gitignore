@@ -1,0 +1,53 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment Variable
+.env
+
+# Log
+*.log
+
+# Temporary Files
+*.tmp
+
+# Cache
+.cache/
+
+# Python cache
+.pytest_cache/
+
+# Build
+build/
+dist/
+
+# Secret
+secrets.toml
+
+# Google Colab
+sample_data/
+
+# Jangan upload dataset mentah
+*.csv
+*.xlsx
+*.xls
+*.json
