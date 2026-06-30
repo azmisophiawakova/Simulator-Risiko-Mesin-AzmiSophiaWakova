@@ -1,3 +1,4 @@
+from pathlib import Path
 import streamlit as st
 import joblib
 import numpy as np
@@ -112,10 +113,19 @@ st.sidebar.write("Status : Production")
 # MODEL LOADER (Validation Script)
 # =====================================================
 
+BASE_DIR = Path(__file__).resolve().parent
+import os
+
+st.write("Current Working Directory:", os.getcwd())
+st.write("Isi folder:", os.listdir())
 @st.cache_resource
 def load_ml_assets():
-    model = joblib.load("model_risiko_v1.joblib")
-    scaler = joblib.load("scaler_risiko_v1.joblib")
+    model_path = BASE_DIR / "model_risiko_v1.joblib"
+    scaler_path = BASE_DIR / "scaler_risiko_v1.joblib"
+
+    model = joblib.load(model_path)
+    scaler = joblib.load(scaler_path)
+
     return model, scaler
 
 try:
