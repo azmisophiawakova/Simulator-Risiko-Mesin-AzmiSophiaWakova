@@ -142,8 +142,6 @@ try:
     # =====================================================
     # MODEL INFORMATION
     # =====================================================
-
-    st.caption("✅ Model berhasil dimuat dari file Joblib (Inference Only)")
     
 except Exception as e:
     st.error("Model gagal dimuat.")
