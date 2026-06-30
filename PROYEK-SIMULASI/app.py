@@ -1,4 +1,5 @@
 from pathlib import Path
+import pandas as pd
 import streamlit as st
 import joblib
 import numpy as np
@@ -109,6 +110,17 @@ st.sidebar.write("Deployment : Streamlit Cloud Ready")
 
 st.sidebar.write("Status : Production")
 
+st.sidebar.markdown("---")
+
+st.sidebar.subheader("📊 Pipeline")
+
+st.sidebar.write("✔ Training (Offline)")
+st.sidebar.write("✔ Model Export (.joblib)")
+st.sidebar.write("✔ Model Loading")
+st.sidebar.write("✔ Inference")
+st.sidebar.write("✔ Drift Detection")
+st.sidebar.write("✔ Ethical Audit")
+
 # =====================================================
 # MODEL LOADER (Validation Script)
 # =====================================================
@@ -127,7 +139,12 @@ def load_ml_assets():
 
 try:
     model, scaler = load_ml_assets()
+    # =====================================================
+    # MODEL INFORMATION
+    # =====================================================
 
+    st.caption("✅ Model berhasil dimuat dari file Joblib (Inference Only)")
+    
 except Exception as e:
     st.error("Model gagal dimuat.")
     st.exception(e)
@@ -186,6 +203,18 @@ with col5:
 
 st.markdown("---")
 
+with st.expander("📚 Data Historis Model"):
+
+    train_df = pd.DataFrame(
+        {
+            "Suhu Mesin": [60,70,80,90,100],
+            "Getaran Mesin": [2,4,6,8,10],
+            "Skor Risiko": [10,25,45,70,95]
+        }
+    )
+
+    st.dataframe(train_df, use_container_width=True)
+    
 # =====================================================
 # INPUT
 # =====================================================
@@ -249,7 +278,7 @@ X_train = np.array([
     [100,10]
 ])
 
-TRAIN_MEAN = np.mean(X_train)
+TRAIN_MEAN = X_train.mean()
 
 def check_data_drift(
         new_data,
@@ -311,16 +340,65 @@ rekomendasi = "-"
 if st.button("🚀 Jalankan Prediksi", use_container_width=True):
 
     data = np.array([[suhu, getaran]])
+    # Raw input (mengandung data sensitif sebagai contoh)
 
+    raw_input = pd.DataFrame({
+        "Nama_Operator": ["Azmi Sophia Wakova"],
+        "NIK_Petugas":["********"],
+        "Suhu": [suhu],
+        "Getaran": [getaran]
+    })
+
+    st.subheader("📥 Raw Input")
+
+    st.dataframe(raw_input, use_container_width=True)
+    
+    # Menghapus atribut sensitif
+
+    clean_input = clean_sensitive_data(raw_input)
+
+    st.subheader("🔒 Setelah Anonymization")
+
+    st.dataframe(clean_input, use_container_width=True)
+    
     data_scaled = scaler.transform(data)
+    
+    st.subheader("⚙ Hasil StandardScaler")
+
+    scaled_df = pd.DataFrame(
+        data_scaled,
+        columns=["Suhu (Scaled)", "Getaran (Scaled)"]
+    )
+
+    st.dataframe(scaled_df, use_container_width=True)
+
+    with st.expander("🔍 Detail Proses Inference"):
+
+        st.write("Tahapan yang dilakukan sistem:")
+
+        st.markdown("""
+    1. Input sensor diterima.
+    2. Data dibersihkan dari atribut sensitif.
+    3. Data diubah menggunakan StandardScaler.
+    4. Model Linear Regression melakukan prediksi.
+    5. Sistem memeriksa Data Drift.
+    6. Mesin keputusan (MCDM) menentukan rekomendasi.
+    """)
 
     hasil = model.predict(data_scaled)[0]
+    
+    st.success("✅ Prediksi dilakukan menggunakan model yang dimuat dari file Joblib.")
     
     # Monitoring Drift
 
     drift_status, drift_value = check_data_drift(
     data,
     TRAIN_MEAN
+    )
+
+    st.metric(
+        "Nilai Drift",
+        f"{drift_value:.2f}"
     )
 
     if drift_status:
